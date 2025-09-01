@@ -32,11 +32,13 @@ body {
     background-color: var(--background-color, #f0f0f0);
     color: var(--text-color, #333);
 }
+html, body { height: 100%; }
 
 #app {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
 }
 
 header {
@@ -344,3 +346,4 @@ input:checked + .slider:before {
         height: 100%; 
     }
 }
+
