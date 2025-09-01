@@ -90,39 +90,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const notesTextarea = document.getElementById('notes');
 
-    // --- Canvas Sizing ---
+    // --- Canvas Sizing (dynamic, mobile-aware) ---
+    function getViewportCssHeight() {
+        if (window.visualViewport && typeof window.visualViewport.height === 'number') {
+            return Math.round(window.visualViewport.height);
+        }
+        return window.innerHeight || document.documentElement.clientHeight || 600;
+    }
+
+    function computeAvailableCanvasCssSize() {
+        const header = document.querySelector('header');
+        const bench = document.getElementById('bench');
+        const parent = canvas.parentElement; // <main>
+
+        const cssW = (parent ? Math.max(1, Math.floor(parent.getBoundingClientRect().width)) : document.documentElement.clientWidth) || window.innerWidth || 800;
+        let cssH = getViewportCssHeight();
+
+        const headerH = header ? Math.floor(header.getBoundingClientRect().height) : 0;
+        const benchHidden = bench ? bench.classList.contains('hidden') : false;
+        const benchH = bench && !benchHidden ? Math.floor(bench.getBoundingClientRect().height) : 0;
+
+        // Subtract fixed header and bench bars; leave at least 200px
+        cssH = Math.max(200, cssH - headerH - benchH);
+        return { cssW, cssH };
+    }
+
     function resizeCanvas() {
         const dpr = window.devicePixelRatio || 1;
-        let w = canvas.clientWidth || canvas.offsetWidth;
-        let h = canvas.clientHeight || canvas.offsetHeight;
-        if (!w || !h) {
-            const parent = canvas.parentElement;
-            if (parent) {
-                const rect = parent.getBoundingClientRect();
-                w = rect.width || window.innerWidth;
-                h = rect.height || Math.max(200, window.innerHeight * 0.6);
-            } else {
-                w = window.innerWidth;
-                h = Math.max(200, window.innerHeight * 0.6);
-            }
-        }
-        // Ensure CSS size
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
+        const { cssW, cssH } = computeAvailableCanvasCssSize();
+
+        // Apply CSS size
+        canvas.style.width = cssW + 'px';
+        canvas.style.height = cssH + 'px';
+
         // Backing store size in device pixels
-        canvas.width = Math.round(w * dpr);
-        canvas.height = Math.round(h * dpr);
-        // Scale drawing to CSS pixel coordinates
+        canvas.width = Math.round(cssW * dpr);
+        canvas.height = Math.round(cssH * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        // Offscreen buffer uses same scaling
-        fieldBuffer.width = Math.round(w * dpr);
-        fieldBuffer.height = Math.round(h * dpr);
+
+        // Offscreen field buffer matches the same logical size
+        fieldBuffer.width = Math.round(cssW * dpr);
+        fieldBuffer.height = Math.round(cssH * dpr);
         fieldCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        drawField(fieldCtx, w, h);
+        drawField(fieldCtx, cssW, cssH);
         draw();
     }
 
     window.addEventListener('resize', resizeCanvas);
+    // React to mobile address bar show/hide and rotations
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', resizeCanvas);
+        window.visualViewport.addEventListener('scroll', resizeCanvas);
+    }
+    window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 300));
     // Handle dynamic viewport changes on mobile (address bar show/hide)
     try {
         const ro = new ResizeObserver(() => resizeCanvas());
