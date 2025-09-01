@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "entryPoint": "./index.js",
+    "name": "Coach Assist",
+    "slug": "coach-assist-app",
+    "scheme": "coachassist",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.coachassist.app"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
