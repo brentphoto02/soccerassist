@@ -1,0 +1,346 @@
+/* Basic Styles */
+:root {
+    --background-color: #f0f0f0;
+    --text-color: #333;
+    --header-bg: #333;
+    --header-text: white;
+    --control-bg: #fff;
+    --field-bg: #4CAF50;
+    --bench-bg: #fff;
+    --player-chip-bg: #ddd;
+    --home-chip-bg: #ffd6d8;
+    --opponent-chip-bg: #cde7ff;
+}
+
+body.dark-mode {
+    --background-color: #333;
+    --text-color: #f0f0f0;
+    --header-bg: #222;
+    --header-text: #f0f0f0;
+    --control-bg: #444;
+    --field-bg: #3a8f3d;
+    --bench-bg: #444;
+    --player-chip-bg: #555;
+    --home-chip-bg: #6b2f3a;
+    --opponent-chip-bg: #2f4f6b;
+}
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color, #f0f0f0);
+    color: var(--text-color, #333);
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    background-color: var(--header-bg);
+    color: var(--header-text);
+    padding: 0.5rem;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+main {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+#controls {
+    width: 300px;
+    padding: 1rem;
+    background-color: var(--control-bg);
+    overflow-y: auto;
+    z-index: 10;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transition: transform 0.3s ease;
+}
+
+#controls.hidden {
+    transform: translateX(-100%);
+}
+
+#soccer-field {
+    flex-grow: 1;
+    background-color: var(--field-bg, #4CAF50);
+    height: 100%;
+    min-height: 60vh; /* ensure visible height even if percentages fail */
+    width: 100%;
+    touch-action: none; /* prevent touch scrolling while drawing/dragging */
+}
+
+#bench {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--bench-bg);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    overflow-x: auto;
+    z-index: 10;
+    transition: transform 0.3s ease;
+}
+
+#bench.hidden {
+    transform: translateY(100%);
+}
+
+#bench h2 {
+    margin: 0;
+}
+
+#bench-players {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.player-chip {
+    background-color: var(--player-chip-bg);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    text-align: center;
+    cursor: grab;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    touch-action: none; /* avoid unintended scrolling when dragging from bench */
+}
+
+.player-chip.home {
+    background-color: var(--home-chip-bg);
+}
+
+.player-chip.opponent {
+    background-color: var(--opponent-chip-bg);
+}
+
+.player-chip .remove-btn {
+    margin-left: 0.5rem;
+    border: none;
+    background: transparent;
+    color: transparent; /* hide underlying text if any */
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.player-chip .remove-btn::before {
+    content: '×';
+    color: #b00020;
+}
+
+.player-chip .remove-btn:hover {
+    color: transparent;
+}
+
+.player-chip .remove-btn:hover::before {
+    color: #d32f2f;
+}
+
+.tool-row {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.tool-btn {
+    padding: 0.4rem 0.7rem;
+    border: 1px solid #888;
+    background: #eee;
+    color: #222;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+body.dark-mode .tool-btn {
+    background: #555;
+    color: #eee;
+    border-color: #777;
+}
+
+.tool-btn.active,
+.tool-btn[aria-pressed="true"] {
+    background: #2196F3;
+    color: #fff;
+    border-color: #1976D2;
+}
+
+.player-chip .rename-btn {
+    margin-left: 0.5rem;
+    border: none;
+    background: transparent;
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+body.dark-mode .player-chip .rename-btn {
+    color: #ddd;
+}
+
+.player-chip .rename-btn:hover {
+    color: #000;
+}
+
+body.dark-mode .player-chip .rename-btn:hover {
+    color: #fff;
+}
+
+.toggle-button {
+    position: fixed;
+    background-color: #333;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 11;
+}
+
+#controls-toggle {
+    right: 1rem;
+    top: 5rem;
+}
+
+#bench-toggle {
+    bottom: 1rem;
+    right: 1rem;
+}
+
+.toggle-button.controls::before,
+.toggle-button.bench::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+/* Controls icon (sliders) */
+.toggle-button.controls::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cg fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M3 5h6'/%3E%3Ccircle cx='12' cy='5' r='2' fill='%23fff'/%3E%3Cpath d='M3 10h10'/%3E%3Ccircle cx='16' cy='10' r='2' fill='%23fff'/%3E%3Cpath d='M3 15h8'/%3E%3Ccircle cx='12' cy='15' r='2' fill='%23fff'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Bench icon (three people) */
+.toggle-button.bench::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cg fill='%23fff'%3E%3Ccircle cx='5' cy='6' r='2'/%3E%3Ccircle cx='10' cy='6' r='2'/%3E%3Ccircle cx='15' cy='6' r='2'/%3E%3Crect x='3' y='9' width='14' height='2' rx='1'/%3E%3Crect x='2' y='12' width='16' height='2' rx='1'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* When using icon-style toggles, size and hide text visually */
+.toggle-button.controls, .toggle-button.bench {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+}
+
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 34px;
+    position: relative;
+    width: 60px;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+}
+
+.slider:before {
+    background-color: #fff;
+    bottom: 4px;
+    content: "";
+    height: 26px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 26px;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    main {
+        flex-direction: column;
+    }
+
+    #controls {
+        width: 100%;
+        height: auto;
+        bottom: auto;
+    }
+    
+    #controls.hidden {
+        transform: translateX(-100%);
+    }
+
+    #bench {
+        width: 100%;
+    }
+    
+    #bench.hidden {
+        transform: translateY(100%);
+    }
+
+    #soccer-field {
+        height: 100%; 
+    }
+}

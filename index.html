@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#333333">
+    <title>Soccer Assist</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Soccer Assist</h1>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+            </div>
+        </header>
+        <main>
+            <div id="controls-toggle" class="toggle-button controls" aria-label="Toggle controls">Controls</div>
+            <div id="controls">
+                <div class="control-group">
+                    <h2>Players</h2>
+                    <input type="text" id="player-name" placeholder="Enter player name">
+                    <label style="display:block; margin: 0.5rem 0;">
+                        <input type="checkbox" id="is-opponent"> Opponent
+                    </label>
+                    <button id="add-player">Add Player</button>
+                </div>
+                <div class="control-group">
+                    <h2>Formations</h2>
+                    <input type="text" id="formation-name" placeholder="Formation name">
+                    <button id="save-formation">Save Formation</button>
+                    <button id="rename-formation">Rename</button>
+                    <button id="delete-formation">Delete</button>
+                    <select id="formation-select"></select>
+                </div>
+                <div class="control-group">
+                    <h2>Timer</h2>
+                    <input type="number" id="timer-duration" value="5" min="1">
+                    <span>minutes</span>
+                    <button id="start-timer">Start</button>
+                    <button id="stop-timer">Stop</button>
+                    <button id="reset-timer">Reset</button>
+                    <div id="timer-display">00:00</div>
+                </div>
+                <div class="control-group">
+                    <h2>Drill Designer</h2>
+                    <button id="toggle-draw-mode">Draw Mode: Off</button>
+                    <button id="clear-drawing">Clear Drawing</button>
+                    <div class="tool-row">
+                        <span>Tool:</span>
+                        <button id="tool-freehand" class="tool-btn" aria-pressed="true">Freehand</button>
+                        <button id="tool-arrow" class="tool-btn" aria-pressed="false">Arrow</button>
+                        <button id="tool-cone" class="tool-btn" aria-pressed="false">Cone</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <h2>Notes</h2>
+                    <textarea id="notes" placeholder="Enter notes here..."></textarea>
+                </div>
+            </div>
+            <canvas id="soccer-field"></canvas>
+        </main>
+        <div id="bench-toggle" class="toggle-button bench" aria-label="Toggle bench">Bench</div>
+        <div id="bench">
+            <h2>Bench</h2>
+            <div id="bench-players"></div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="ballClip">
+      <circle cx="32" cy="32" r="30"/>
+    </clipPath>
+    <!-- Regular pentagon centered at 0,0 with radius 6 -->
+    <g id="pentagon">
+      <polygon points="0,-6 5.71,1.85 3.53,4.85 -3.53,4.85 -5.71,1.85"/>
+    </g>
+  </defs>
+
+  <!-- Outer Ball -->
+  <circle cx="32" cy="32" r="30" fill="#fff" stroke="#222" stroke-width="2"/>
+
+  <!-- Pattern clipped to the ball -->
+  <g clip-path="url(#ballClip)" stroke="#111" stroke-width="1.2" stroke-linejoin="round">
+    <!-- Central black pentagon (scaled up) -->
+    <g fill="#111" transform="translate(32,32) scale(1.35)">
+      <use href="#pentagon"/>
+    </g>
+
+    <!-- Five surrounding black pentagons -->
+    <g fill="#111">
+      <g transform="translate(32,18)"><use href="#pentagon"/></g>
+      <g transform="translate(45.3,27.7)"><use href="#pentagon"/></g>
+      <g transform="translate(40.2,43.3)"><use href="#pentagon"/></g>
+      <g transform="translate(23.8,43.3)"><use href="#pentagon"/></g>
+      <g transform="translate(18.7,27.7)"><use href="#pentagon"/></g>
+    </g>
+
+    <!-- Seams: light lines emanating from central pentagon vertices -->
+    <g stroke="#222" fill="none" stroke-width="1">
+      <path d="M32,24 L32,12"/>
+      <path d="M39.6,34.5 L49.5,28"/>
+      <path d="M36.7,38.5 L41,47"/>
+      <path d="M27.3,38.5 L23,47"/>
+      <path d="M24.4,34.5 L14.5,28"/>
+    </g>
+  </g>
+
+  <!-- Subtle highlight -->
+  <ellipse cx="26" cy="22" rx="14" ry="8" fill="#fff" opacity="0.25"/>
+</svg>
