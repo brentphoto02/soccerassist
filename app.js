@@ -123,6 +123,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('resize', resizeCanvas);
+    // Handle dynamic viewport changes on mobile (address bar show/hide)
+    try {
+        const ro = new ResizeObserver(() => resizeCanvas());
+        if (canvas && canvas.parentElement) ro.observe(canvas.parentElement);
+    } catch (_) {}
+    window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 300));
     window.addEventListener('load', resizeCanvas);
     window.addEventListener('load', resizeCanvas);
 
